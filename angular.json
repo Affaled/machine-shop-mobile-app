@@ -23,9 +23,7 @@
               "browser": ""
             },
             "index": "src/index.html",
-            "polyfills": [
-              "src/polyfills.ts"
-            ],
+            "polyfills": ["src/polyfills.ts"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -130,17 +128,20 @@
     }
   },
   "cli": {
-    "schematicCollections": [
-      "@ionic/angular-toolkit"
-    ],
+    "schematicCollections": ["@ionic/angular-toolkit"],
     "analytics": "115116f0-6e10-4ac3-aff3-58daf1ee1757"
   },
   "schematics": {
     "@ionic/angular-toolkit:component": {
-      "styleext": "scss"
+      "styleext": "scss",
+      "spec": false
     },
     "@ionic/angular-toolkit:page": {
-      "styleext": "scss"
+      "styleext": "scss",
+      "spec": false
+    },
+    "@ionic/angular-toolkit:service": {
+      "spec": false
     },
     "@angular-eslint/schematics:application": {
       "setParserOptionsProject": true

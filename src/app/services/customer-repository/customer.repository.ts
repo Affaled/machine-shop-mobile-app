@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { StorageService } from '../storage/storage.service';
-
-export interface Customer {
-  id: number;
-  name: string;
-  phone: string;
-}
+import { Customer } from 'src/app/models /customer.model';
 
 @Injectable({
   providedIn: 'root',
@@ -19,14 +14,14 @@ export class CustomerRepository {
     return (await this.storage.get<Customer[]>(this.key)) || [];
   }
 
-  async getById(id: number): Promise<Customer | null> {
+  async getById(id: string): Promise<Customer | null> {
     const customers = await this.getAll();
     return customers.find((customer) => customer.id === id) || null;
   }
 
   async add(customer: Omit<Customer, 'id'>): Promise<Customer> {
     const customers = await this.getAll();
-    const newCustomer: Customer = { id: Date.now(), ...customer };
+    const newCustomer: Customer = { id: crypto.randomUUID(), ...customer };
     customers.push(newCustomer);
     await this.storage.set(this.key, customers);
     return newCustomer;
@@ -40,7 +35,7 @@ export class CustomerRepository {
     await this.storage.set(this.key, customers);
   }
 
-  async delete(id: number): Promise<void> {
+  async delete(id: string): Promise<void> {
     const customers = await this.getAll();
     await this.storage.set(
       this.key,

@@ -7,5 +7,6 @@
   UI Toolkit :             Ionic
   Native Runtime/Build :   Capacitor
   Storage :                Ionic Storage + SQLite
+  Backend :                NodeJS
 └─────────────────────────────────────────────────┘
 ```
