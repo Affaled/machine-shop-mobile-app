@@ -1,4 +1,9 @@
-import { Component, EnvironmentInjector, inject } from '@angular/core';
+import {
+  Component,
+  EnvironmentInjector,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import {
   IonTabs,
   IonTabBar,
@@ -17,6 +22,8 @@ import { home } from 'ionicons/icons';
 })
 export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
+
+  @ViewChild(IonTabs) tabs?: IonTabs;
 
   constructor() {
     addIcons({ home });
