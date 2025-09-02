@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { CustomerRepository } from './customer-repository';
 
 describe('CustomerRepository', () => {
