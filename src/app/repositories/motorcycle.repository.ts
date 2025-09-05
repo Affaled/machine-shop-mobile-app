@@ -16,4 +16,8 @@ export class MotorcycleRepository {
   async getAllMotorcycles(): Promise<Motorcycle[]> {
     return this.repository.getAll();
   }
+
+  async addMotorcycle(motorcycle: Motorcycle): Promise<void> {
+    return this.repository.add(motorcycle);
+  }
 }

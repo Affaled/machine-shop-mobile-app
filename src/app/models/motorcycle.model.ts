@@ -3,5 +3,5 @@ export interface Motorcycle {
   customerId: number;
   model: string;
   plate: string;
-  year: string;
+  year: number;
 }

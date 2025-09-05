@@ -1,37 +1,37 @@
 <ion-tabs>
   <ion-tab-bar slot="bottom">
-    <ion-tab-button tab="bicycle" href="/tabs/bicycle">
-      <ion-icon
-        aria-hidden="true"
-        name="{{ tabs?.getSelected() == 'bicycle' ? 'bicycle' : 'bicycle-outline' }}"
-      ></ion-icon>
-      <ion-label>Motos</ion-label>
-    </ion-tab-button>
     <ion-tab-button tab="customer" href="/tabs/customer">
       <ion-icon
         aria-hidden="true"
-        name="{{ tabs?.getSelected() == 'person' ? 'person' : 'person-outline' }}"
+        name="{{ tabs?.getSelected() == 'customer' ? 'person' : 'person-outline' }}"
       ></ion-icon>
       <ion-label>Clientes</ion-label>
     </ion-tab-button>
     <ion-tab-button tab="work" href="/tabs/work">
       <ion-icon
         aria-hidden="true"
-        name="{{ tabs?.getSelected() == 'build' ? 'build' : 'build-outline' }}"
+        name="{{ tabs?.getSelected() == 'work' ? 'build' : 'build-outline' }}"
       ></ion-icon>
       <ion-label>Serviços</ion-label>
     </ion-tab-button>
-    <ion-tab-button tab="products" href="/tabs/products">
+    <ion-tab-button tab="motorcycle" href="/tabs/motorcycle">
       <ion-icon
         aria-hidden="true"
-        name="{{ tabs?.getSelected() == 'storefront' ? 'storefront' : 'storefront-outline' }}"
+        name="{{ tabs?.getSelected() == 'motorcycle' ? 'bicycle' : 'bicycle-outline' }}"
+      ></ion-icon>
+      <ion-label>Motos</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="products" href="/tabs/product">
+      <ion-icon
+        aria-hidden="true"
+        name="{{ tabs?.getSelected() == 'product' ? 'storefront' : 'storefront-outline' }}"
       ></ion-icon>
       <ion-label>Produtos</ion-label>
     </ion-tab-button>
     <ion-tab-button tab="order" href="/tabs/order">
       <ion-icon
         aria-hidden="true"
-        name="{{ tabs?.getSelected() == 'bag' ? 'bag' : 'bag-outline' }}"
+        name="{{ tabs?.getSelected() == 'order' ? 'bag' : 'bag-outline' }}"
       ></ion-icon>
       <ion-label>Pedidos</ion-label>
     </ion-tab-button>
