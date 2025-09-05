@@ -4,5 +4,5 @@ export interface Customer {
   id: string;
   name: string;
   phone: string;
-  motorcycles: Motorcycle[];
+  motorcycles?: Motorcycle[];
 }

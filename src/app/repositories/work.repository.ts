@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { StorageService } from '../storage/storage.service';
-import { Work } from 'src/app/models /work.models';
+import { StorageService } from '../services/storage.service';
+import { Work } from '../models/work.model';
 import { GenericRepository } from 'src/app/repositories/generic.repository';
 
 @Injectable({
   providedIn: 'root',
 })
-export class WorkService {
+export class WorkRepository {
   private repository: GenericRepository<Work>;
 
   constructor(private storage: StorageService) {
