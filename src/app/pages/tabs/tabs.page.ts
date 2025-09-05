@@ -12,7 +12,18 @@ import {
   IonLabel,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { home } from 'ionicons/icons';
+import {
+  bicycle,
+  bicycleOutline,
+  person,
+  personOutline,
+  build,
+  buildOutline,
+  storefront,
+  storefrontOutline,
+  bag,
+  bagOutline,
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
@@ -26,6 +37,17 @@ export class TabsPage {
   @ViewChild(IonTabs) tabs?: IonTabs;
 
   constructor() {
-    addIcons({ home });
+    addIcons({
+      bicycle,
+      bicycleOutline,
+      person,
+      personOutline,
+      build,
+      buildOutline,
+      storefront,
+      storefrontOutline,
+      bag,
+      bagOutline,
+    });
   }
 }

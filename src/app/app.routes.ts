@@ -7,8 +7,10 @@ export const routes: Routes = [
       import('./pages/tabs/tabs.routes').then((m) => m.routes),
   },
   {
-    path: 'home',
+    path: 'motorcycle',
     loadComponent: () =>
-      import('./pages/home/home.page').then((m) => m.HomePage),
+      import('./pages/motorcycle/motorcycle.page').then(
+        (m) => m.MotorcyclePage
+      ),
   },
 ];
