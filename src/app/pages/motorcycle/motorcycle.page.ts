@@ -10,10 +10,20 @@ import {
   IonSearchbar,
   IonTitle,
   IonToolbar,
+  IonList,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardContent,
+  IonRefresher,
+  IonRefresherContent,
+  IonSpinner,
+  IonCardSubtitle,
 } from '@ionic/angular/standalone';
-import { MotorcycleService } from 'src/app/services/motorcycle.service';
+import { MotorcycleRepository } from 'src/app/repositories/motorcycle.repository';
 import { AlertController } from '@ionic/angular';
 import { CustomerRepository } from 'src/app/repositories/customer.repository';
+import { Motorcycle } from 'src/app/models/motorcycle.model';
 
 @Component({
   selector: 'app-motorcycle',
@@ -21,6 +31,15 @@ import { CustomerRepository } from 'src/app/repositories/customer.repository';
   styleUrls: ['./motorcycle.page.scss'],
   standalone: true,
   imports: [
+    IonCardSubtitle,
+    IonSpinner,
+    IonRefresherContent,
+    IonRefresher,
+    IonCardContent,
+    IonCardTitle,
+    IonCardHeader,
+    IonCard,
+    IonList,
     IonButton,
     IonButtons,
     IonContent,
@@ -33,12 +52,62 @@ import { CustomerRepository } from 'src/app/repositories/customer.repository';
     FormsModule,
   ],
 })
-export class MotorcyclePage {
+export class MotorcyclePage implements OnInit {
+  motorcycles: Motorcycle[] = [];
+  filteredMotorcycles: Motorcycle[] = [];
+  customers: any[] = [];
+  searchTerm: string = '';
+  loading: boolean = true;
+
+  async ngOnInit() {
+    await this.loadData();
+  }
+
   constructor(
-    private motorcycleService: MotorcycleService,
+    private motorcycleRepository: MotorcycleRepository,
     private alertController: AlertController,
     private customerRepository: CustomerRepository
   ) {}
+
+  async loadData() {
+    this.loading = true;
+    try {
+      [this.motorcycles, this.customers] = await Promise.all([
+        this.motorcycleRepository.getAllMotorcycles(),
+        this.customerRepository.getAllCustomers(),
+      ]);
+      this.filteredMotorcycles = [...this.motorcycles];
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  filterMotorcycles() {
+    if (!this.searchTerm.trim()) {
+      this.filteredMotorcycles = [...this.motorcycles];
+      return;
+    }
+
+    const term = this.searchTerm.toLowerCase();
+    this.filteredMotorcycles = this.motorcycles.filter(
+      (motorcycle) =>
+        motorcycle.model.toLowerCase().includes(term) ||
+        motorcycle.plate.toLowerCase().includes(term) ||
+        this.getCustomerName(motorcycle.customerId).toLowerCase().includes(term)
+    );
+  }
+
+  getCustomerName(customerId: number): string {
+    return (
+      this.customers.find((c) => c.id === customerId)?.name ||
+      'Cliente não encontrado'
+    );
+  }
+
+  async refresh(event: any) {
+    await this.loadData();
+    event.target.complete();
+  }
 
   async addMotorcycle() {
     const customers = await this.customerRepository.getAllCustomers();
@@ -84,8 +153,29 @@ export class MotorcyclePage {
           text: 'Adicionar',
           handler: (data) => {
             if (data.model && data.plate && data.customerId) {
-              this.motorcycleService.createMotorcycle(data);
+              this.motorcycleRepository.createMotorcycle(data);
             }
+          },
+        },
+      ],
+    });
+    await alert.present();
+  }
+
+  async deleteMotorcycle(motorcycle: Motorcycle) {
+    const alert = await this.alertController.create({
+      header: 'Confirmar Exclusão',
+      message: `Tem certeza que deseja excluir a moto ${motorcycle.model} (Placa: ${motorcycle.plate})?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Excluir',
+          handler: async () => {
+            await this.motorcycleRepository.deleteMotorcycle(motorcycle.id);
+            await this.loadData();
           },
         },
       ],

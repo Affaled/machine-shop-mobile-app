@@ -14,5 +14,59 @@
     placeholder="Buscar moto"
     animated="true"
     debounce="500"
+    [(ngModel)]="searchTerm"
+    (ionInput)="filterMotorcycles()"
   ></ion-searchbar>
+
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading) {
+  <div class="loading-container">
+    <ion-spinner></ion-spinner>
+  </div>
+
+  } @if (!loading && filteredMotorcycles.length === 0) {
+  <div
+    class="empty-state ion-display-flex ion-flex-column ion-justify-content-center ion-align-items-center"
+  >
+    <ion-icon name="bicycle-outline" size="large"></ion-icon>
+    <p>Nenhuma moto encontrada</p>
+    <ion-button (click)="addMotorcycle()" fill="solid">
+      <ion-icon name="add-outline" slot="start"></ion-icon>
+      Adicionar Moto
+    </ion-button>
+  </div>
+
+  } @if (!loading && filteredMotorcycles.length > 0) {
+  <ion-list>
+    @for (motorcycle of filteredMotorcycles; track $index) {
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>{{ motorcycle.model }}</ion-card-title>
+        <ion-card-subtitle
+          >{{ motorcycle.plate }} - {{ motorcycle.year }}</ion-card-subtitle
+        >
+      </ion-card-header>
+      <ion-card-content>
+        <p>Cliente: {{getCustomerName(motorcycle.customerId)}}</p>
+        <div>
+          <ion-button fill="clear" size="small" (click)="addMotorcycle()">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button
+            fill="clear"
+            size="small"
+            color="danger"
+            (click)="deleteMotorcycle(motorcycle)"
+          >
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-card-content>
+    </ion-card>
+    }
+  </ion-list>
+  }
 </ion-content>

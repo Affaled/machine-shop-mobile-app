@@ -17,7 +17,19 @@ export class MotorcycleRepository {
     return this.repository.getAll();
   }
 
-  async addMotorcycle(motorcycle: Motorcycle): Promise<void> {
+  async createMotorcycle(data: Partial<Motorcycle>): Promise<void> {
+    const motorcycle: Motorcycle = {
+      id: crypto.randomUUID(),
+      customerId: data.customerId || 0,
+      model: data.model || '',
+      plate: data.plate || '',
+      year: data.year || new Date().getFullYear(),
+    };
+
     return this.repository.add(motorcycle);
+  }
+
+  async deleteMotorcycle(id: string): Promise<void> {
+    return this.repository.delete(id);
   }
 }
