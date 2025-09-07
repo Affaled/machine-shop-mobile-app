@@ -12,15 +12,12 @@ import {
   IonButton,
   IonContent,
   IonHeader,
-  IonInput,
   IonItem,
   IonList,
   IonSelect,
   IonSelectOption,
 } from '@ionic/angular/standalone';
 import { Order } from 'src/app/models/order.model';
-import { Product } from 'src/app/models/product.model';
-import { Work } from 'src/app/models/work.model';
 import { Motorcycle } from 'src/app/models/motorcycle.model';
 import { CustomerService } from 'src/app/services/customer.service';
 import { MotorcycleService } from 'src/app/services/motorcycle.service';
@@ -42,7 +39,6 @@ import { OrderService } from 'src/app/services/order.service';
     IonItem,
     IonSelect,
     IonSelectOption,
-    IonInput,
     IonList,
   ],
 })
