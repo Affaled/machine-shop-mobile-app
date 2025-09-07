@@ -12,6 +12,11 @@ export const routes: Routes = [
           import('../motorcycle/motorcycle.page').then((m) => m.MotorcyclePage),
       },
       {
+        path: 'customer',
+        loadComponent: () =>
+          import('../customers/customers.page').then((m) => m.CustomersPage),
+      },
+      {
         path: '',
         redirectTo: '/tabs/motorcycle',
         pathMatch: 'full',
