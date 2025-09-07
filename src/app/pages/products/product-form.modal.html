@@ -1,0 +1,66 @@
+<ion-header>
+  <div class="modal-title-container">
+    <h2 class="modal-title">{{ isEdit() ? 'Editar Produto' : 'Adicionar Produto' }}</h2>
+  </div>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="createOrUpdate()">
+    <ion-list lines="none">
+
+      <!-- Nome -->
+      <ion-item [class.has-error]="form.get('name')?.invalid && form.get('name')?.touched">
+        <ion-input 
+          formControlName="name" 
+          label="Nome" 
+          labelPlacement="stacked" 
+          placeholder="Digite o nome do produto">
+        </ion-input>
+      </ion-item>
+      @if(form.get('name')?.invalid && form.get('name')?.touched){
+        <ng-container>
+          <span class="error-message">Nome é obrigatório</span>
+        </ng-container>
+      }
+      <!-- Estoque -->
+      <ion-item [class.has-error]="form.get('stock')?.invalid && form.get('stock')?.touched">
+        <ion-input 
+          type="number"
+          formControlName="stock" 
+          label="Estoque" 
+          labelPlacement="stacked" 
+          placeholder="Quantidade em estoque">
+        </ion-input>
+      </ion-item>
+      @if(form.get('stock')?.invalid && form.get('stock')?.touched){
+        <ng-container>
+          <span class="error-message">Estoque deve ser maior ou igual a 0</span>
+        </ng-container>
+        }
+      <!-- Preço -->
+      <ion-item [class.has-error]="form.get('price')?.invalid && form.get('price')?.touched">
+        <ion-input 
+          type="number"
+          formControlName="price" 
+          label="Preço (R$)" 
+          labelPlacement="stacked" 
+          placeholder="Digite o preço do produto">
+        </ion-input>
+      </ion-item>
+      @if(form.get('price')?.invalid && form.get('price')?.touched){
+        <ng-container>
+          <span class="error-message">Preço deve ser maior que 0</span>
+        </ng-container>
+      }
+    </ion-list>
+
+    <div class="modal-actions">
+      <ion-button fill="clear" color="medium" (click)="closeModal()">Cancelar</ion-button>
+      <ion-button 
+        type="submit" 
+        [disabled]="form.invalid">
+        {{ isEdit() ? 'Atualizar' : 'Salvar' }}
+      </ion-button>
+    </div>
+  </form>
+</ion-content>

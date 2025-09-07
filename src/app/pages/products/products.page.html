@@ -1,0 +1,69 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Produtos</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openModal()">
+        <span class="material-symbols-outlined button-icon">add</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-searchbar
+    placeholder="Buscar produto"
+    animated="true"
+    debounce="500"
+    [(ngModel)]="searchTerm"
+  ></ion-searchbar>
+
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading) {
+    <div class="loading-container">
+      <ion-spinner></ion-spinner>
+    </div>
+  } @if (!loading && filteredProducts().length === 0) {
+    <div
+      class="empty-state ion-display-flex ion-flex-column ion-justify-content-center ion-align-items-center"
+    >
+      <ion-icon name="cube-outline" size="large"></ion-icon>
+      <p>Nenhum produto encontrado</p>
+      <ion-button (click)="openModal()" fill="solid">
+        <span class="material-symbols-outlined button-icon">add</span>
+        Adicionar Produto
+      </ion-button>
+    </div>
+  } @if (!loading && filteredProducts().length > 0) {
+    <ion-list>
+      @for (product of this.filteredProducts(); track $index) {
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{ product.name }}</ion-card-title>
+            <ion-card-subtitle>
+              Estoque: {{ product.stock ?? 0 }} | 
+              Preço: R$ {{ product.price | number:'1.2-2' }}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div>
+              <ion-button fill="clear" size="small" (click)="openModal(product)">
+                <span class="material-symbols-outlined">edit</span>
+              </ion-button>
+              <ion-button
+                fill="clear"
+                size="small"
+                color="danger"
+                (click)="deleteProduct(product)"
+              >
+                <span class="material-symbols-outlined">delete</span>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </ion-list>
+  }
+</ion-content>
