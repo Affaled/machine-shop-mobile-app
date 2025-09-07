@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -19,11 +19,14 @@ import {
   IonRefresherContent,
   IonSpinner,
   IonCardSubtitle,
+  ModalController,
 } from '@ionic/angular/standalone';
-import { MotorcycleRepository } from 'src/app/repositories/motorcycle.repository';
+import { MotorcycleService} from 'src/app/services/motorcycle.service';
 import { AlertController } from '@ionic/angular';
-import { CustomerRepository } from 'src/app/repositories/customer.repository';
+import { CustomerService } from 'src/app/services/customer.service';
 import { Motorcycle } from 'src/app/models/motorcycle.model';
+import { Customer } from 'src/app/models/customer.model';
+import { MotorcycleFormModal } from './motorcylcle-form.modal';
 
 @Component({
   selector: 'app-motorcycle',
@@ -53,114 +56,43 @@ import { Motorcycle } from 'src/app/models/motorcycle.model';
   ],
 })
 export class MotorcyclePage implements OnInit {
-  motorcycles: Motorcycle[] = [];
-  filteredMotorcycles: Motorcycle[] = [];
-  customers: any[] = [];
-  searchTerm: string = '';
-  loading: boolean = true;
+  searchTerm = signal('');
+  loading: boolean = false;
 
-  async ngOnInit() {
-    await this.loadData();
-  }
+  async ngOnInit() {}
 
   constructor(
-    private motorcycleRepository: MotorcycleRepository,
+    private motorcycleService: MotorcycleService,
     private alertController: AlertController,
-    private customerRepository: CustomerRepository
+    private customerService: CustomerService,
+    private modalController: ModalController
   ) {}
 
-  async loadData() {
-    this.loading = true;
-    try {
-      [this.motorcycles, this.customers] = await Promise.all([
-        this.motorcycleRepository.getAllMotorcycles(),
-        this.customerRepository.getAllCustomers(),
-      ]);
-      this.filteredMotorcycles = [...this.motorcycles];
-    } finally {
-      this.loading = false;
-    }
-  }
+  public readonly customers$ = this.customerService.customer$;
+  motorcycles$ = this.motorcycleService.motorcycles$;
 
-  filterMotorcycles() {
-    if (!this.searchTerm.trim()) {
-      this.filteredMotorcycles = [...this.motorcycles];
-      return;
+  filteredMotorcycles = computed(() => {
+    const term = this.searchTerm().trim().toLowerCase();
+    const motorcycles = this.motorcycles$();
+
+    if (!term) {
+      return motorcycles;
     }
 
-    const term = this.searchTerm.toLowerCase();
-    this.filteredMotorcycles = this.motorcycles.filter(
-      (motorcycle) =>
-        motorcycle.model.toLowerCase().includes(term) ||
-        motorcycle.plate.toLowerCase().includes(term) ||
-        this.getCustomerName(motorcycle.customerId).toLowerCase().includes(term)
+    return motorcycles.filter(motorcycle =>
+      motorcycle.model.toLowerCase().includes(term) ||
+      motorcycle.plate.toLowerCase().includes(term) ||
+      this.getCustomerName(motorcycle.customerId).toLowerCase().includes(term)
     );
-  }
+  });
 
-  getCustomerName(customerId: number): string {
+  getCustomerName(customerId: string): string {
     return (
-      this.customers.find((c) => c.id === customerId)?.name ||
+      this.customers$().find((c) => c.id === customerId)?.name ||
       'Cliente não encontrado'
     );
   }
 
-  async refresh(event: any) {
-    await this.loadData();
-    event.target.complete();
-  }
-
-  async addMotorcycle() {
-    const customers = await this.customerRepository.getAllCustomers();
-
-    const alert = await this.alertController.create({
-      header: 'Adicionar Moto',
-      inputs: [
-        {
-          name: 'customerId',
-          type: 'radio' as const,
-          label: 'Cliente',
-          value: customers[0]?.id,
-          checked: true,
-        },
-        ...customers.map((customer) => ({
-          name: 'customerId',
-          type: 'radio' as const,
-          label: customer.name,
-          value: customer.id,
-        })),
-        {
-          name: 'model',
-          type: 'text',
-          placeholder: 'Modelo',
-        },
-        {
-          name: 'plate',
-          type: 'text',
-          placeholder: 'Placa',
-        },
-        {
-          name: 'year',
-          type: 'number',
-          placeholder: 'Ano',
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Adicionar',
-          handler: (data) => {
-            if (data.model && data.plate && data.customerId) {
-              this.motorcycleRepository.createMotorcycle(data);
-            }
-          },
-        },
-      ],
-    });
-    await alert.present();
-  }
 
   async deleteMotorcycle(motorcycle: Motorcycle) {
     const alert = await this.alertController.create({
@@ -174,12 +106,35 @@ export class MotorcyclePage implements OnInit {
         {
           text: 'Excluir',
           handler: async () => {
-            await this.motorcycleRepository.deleteMotorcycle(motorcycle.id);
-            await this.loadData();
+            await this.motorcycleService.deleteMotorcycle(motorcycle.id);
           },
         },
       ],
     });
     await alert.present();
   }
+
+
+    async refresh(event: any) {
+      event.target.complete();
+    }
+
+
+    async openModal() {
+    const modal = await this.modalController.create({
+        component: MotorcycleFormModal,
+        cssClass: 'sheet-modal', 
+        animated: true,
+        backdropDismiss: true,
+        initialBreakpoint: 1,
+        breakpoints: [0, 0.4, 0.6, 0.8, 1], 
+        handleBehavior: 'cycle' 
+    });
+
+    modal.onDidDismiss().then((data) => {
+
+    });
+    
+    return await modal.present();
+    }
 }

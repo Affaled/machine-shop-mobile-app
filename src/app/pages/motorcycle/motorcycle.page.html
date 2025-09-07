@@ -2,7 +2,7 @@
   <ion-toolbar>
     <ion-title>Motos</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="addMotorcycle()">
+      <ion-button (click)="openModal()">
         <ion-icon name="add-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -15,7 +15,6 @@
     animated="true"
     debounce="500"
     [(ngModel)]="searchTerm"
-    (ionInput)="filterMotorcycles()"
   ></ion-searchbar>
 
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
@@ -33,15 +32,15 @@
   >
     <ion-icon name="bicycle-outline" size="large"></ion-icon>
     <p>Nenhuma moto encontrada</p>
-    <ion-button (click)="addMotorcycle()" fill="solid">
-      <ion-icon name="add-outline" slot="start"></ion-icon>
+    <ion-button (click)="openModal()" fill="solid">
+       <span class="material-symbols-outlined button-icon">add</span>
       Adicionar Moto
     </ion-button>
   </div>
 
   } @if (!loading && filteredMotorcycles.length > 0) {
   <ion-list>
-    @for (motorcycle of filteredMotorcycles; track $index) {
+    @for (motorcycle of filteredMotorcycles(); track $index) {
     <ion-card>
       <ion-card-header>
         <ion-card-title>{{ motorcycle.model }}</ion-card-title>
@@ -52,7 +51,7 @@
       <ion-card-content>
         <p>Cliente: {{getCustomerName(motorcycle.customerId)}}</p>
         <div>
-          <ion-button fill="clear" size="small" (click)="addMotorcycle()">
+          <ion-button fill="clear" size="small" (click)="openModal()">
             <ion-icon name="create-outline"></ion-icon>
           </ion-button>
           <ion-button
