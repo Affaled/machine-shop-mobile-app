@@ -1,0 +1,59 @@
+<ion-header>
+  <div class="modal-title-container">
+    <h2 class="modal-title">{{ isEdit() ? 'Editar Cliente' : 'Adicionar Cliente' }}</h2>
+  </div>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="createOrUpdate()">
+    <ion-list lines="none">
+
+      <!-- Nome -->
+      <ion-item [class.has-error]="form.get('name')?.invalid && form.get('name')?.touched">
+        <ion-input 
+          formControlName="name" 
+          label="Nome" 
+          labelPlacement="stacked" 
+          placeholder="Digite o nome do cliente">
+        </ion-input>
+      </ion-item>
+      <ng-container *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+        <span class="error-message">Nome é obrigatório</span>
+      </ng-container>
+
+      <!-- Telefone -->
+      <ion-item [class.has-error]="form.get('phone')?.invalid && form.get('phone')?.touched">
+        <ion-input 
+          formControlName="phone" 
+          label="Telefone" 
+          labelPlacement="stacked" 
+          placeholder="Digite o telefone do cliente">
+        </ion-input>
+      </ion-item>
+      <ng-container *ngIf="form.get('phone')?.invalid && form.get('phone')?.touched">
+        <span class="error-message">Telefone é obrigatório</span>
+      </ng-container>
+
+      <!-- Lista de motos -->
+      <h3 class="section-title">Veículos do Cliente</h3>
+      <ion-list>
+        <ion-item *ngFor="let m of motorcyclesCustomer()">
+          {{ m.model }} - {{ m.plate }} - {{ m.year }}
+        </ion-item>
+        <ion-item *ngIf="motorcyclesCustomer().length === 0">
+          Nenhum veículo cadastrado.
+        </ion-item>
+      </ion-list>
+
+    </ion-list>
+
+    <div class="modal-actions">
+      <ion-button fill="clear" color="medium" (click)="closeModal()">Cancelar</ion-button>
+      <ion-button 
+        type="submit" 
+        [disabled]="form.invalid">
+        {{ isEdit() ? 'Atualizar' : 'Salvar' }}
+      </ion-button>
+    </div>
+  </form>
+</ion-content>
