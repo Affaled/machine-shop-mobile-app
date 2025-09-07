@@ -1,0 +1,109 @@
+<ion-header>
+  <div class="modal-title-container">
+    <h2 class="modal-title">Adicionar Moto</h2>
+  </div>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="form-container">
+    <form [formGroup]="form" (ngSubmit)="createOrUpdate()">
+      <div class="form-card">
+        <div class="form-section">
+          <ion-list lines="none">
+
+            <!-- Cliente -->
+            <ng-container *ngIf="form.get('customerId')?.invalid && form.get('customerId')?.touched">
+              <span class="error-message">Cliente é obrigatório</span>
+            </ng-container>
+            <ion-item [class.has-error]="form.get('customerId')?.invalid && form.get('customerId')?.touched">
+              <div class="input-with-icon">
+                <span class="material-symbols-outlined input-icon">person</span>
+                <ion-select 
+                  formControlName="customerId"
+                  interface="action-sheet"
+                  label="Cliente"
+                  labelPlacement="stacked"
+                  placeholder="Selecione um cliente">
+                  <ion-select-option *ngFor="let c of customers$()" [value]="c.id">
+                    {{ c.name }}
+                  </ion-select-option>
+                </ion-select>
+              </div>
+            </ion-item>
+
+            <!-- Modelo -->
+            <ng-container *ngIf="form.get('model')?.invalid && form.get('model')?.touched">
+              <span class="error-message">Modelo é obrigatório</span>
+            </ng-container>
+            <ion-item [class.has-error]="form.get('model')?.invalid && form.get('model')?.touched">
+              <div class="input-with-icon">
+                <span class="material-symbols-outlined input-icon">directions_car</span>
+                <ion-input
+                  type="text"
+                  formControlName="model"
+                  label="Modelo"
+                  labelPlacement="stacked"
+                  placeholder="Digite o modelo do veículo">
+                </ion-input>
+              </div>
+            </ion-item>
+
+            <!-- Placa -->
+            <ng-container *ngIf="form.get('plate')?.invalid && form.get('plate')?.touched">
+              <span class="error-message">Placa é obrigatória</span>
+            </ng-container>
+            <ion-item [class.has-error]="form.get('plate')?.invalid && form.get('plate')?.touched">
+              <div class="input-with-icon">
+                <span class="material-symbols-outlined input-icon">confirmation_number</span>
+                <ion-input
+                  type="text"
+                  formControlName="plate"
+                  label="Placa"
+                  labelPlacement="stacked"
+                  placeholder="Digite a placa">
+                </ion-input>
+              </div>
+            </ion-item>
+
+            <!-- Ano -->
+            <ng-container *ngIf="form.get('year')?.invalid && form.get('year')?.touched">
+              <span class="error-message">Ano é obrigatório e deve ser válido</span>
+            </ng-container>
+            <ion-item [class.has-error]="form.get('year')?.invalid && form.get('year')?.touched">
+              <div class="input-with-icon">
+                <span class="material-symbols-outlined input-icon">calendar_today</span>
+                <ion-input
+                  type="number"
+                  formControlName="year"
+                  label="Ano"
+                  labelPlacement="stacked"
+                  min="1900"
+                  max="{{ currentYear }}"
+                  placeholder="2025">
+                </ion-input>
+              </div>
+            </ion-item>
+
+          </ion-list>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <ion-button 
+          fill="clear" 
+          color="medium" 
+          (click)="closeModal()"
+          class="cancel-button">
+          Cancelar
+        </ion-button>
+        <ion-button
+          type="submit"
+          [disabled]="form.invalid"
+          class="save-button">
+          <span class="material-symbols-outlined button-icon">add</span>
+          Adicionar Veículo
+        </ion-button>
+      </div>
+    </form>
+  </div>
+</ion-content>
