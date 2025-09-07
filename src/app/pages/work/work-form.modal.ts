@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { add, cash, close, construct, save } from 'ionicons/icons';
 import {
   FormBuilder,
   FormGroup,
@@ -9,13 +11,20 @@ import {
 import { ModalController } from '@ionic/angular/standalone';
 import {
   IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
   IonList,
-  IonSelect,
-  IonSelectOption,
+  IonRow,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { Work } from 'src/app/models/work.model';
 import { WorkService } from 'src/app/services/work.service';
@@ -28,14 +37,21 @@ import { WorkService } from 'src/app/services/work.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    IonHeader,
     IonButton,
+    IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCol,
     IonContent,
-    IonItem,
+    IonGrid,
+    IonHeader,
+    IonIcon,
     IonInput,
+    IonItem,
     IonList,
-    IonSelect,
-    IonSelectOption,
+    IonRow,
+    IonTitle,
+    IonToolbar,
   ],
 })
 export class WorkFormModal {
@@ -52,6 +68,7 @@ export class WorkFormModal {
     private modalCtrl: ModalController,
     private workService: WorkService
   ) {
+    addIcons({ add, cash, close, construct, save });
     this.form = this.fb.group({
       name: ['', Validators.required],
       description: [''],

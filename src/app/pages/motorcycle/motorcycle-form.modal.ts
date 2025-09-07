@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { add, calendar, car, card, close, person, save } from 'ionicons/icons';
 import {
   FormBuilder,
   FormGroup,
@@ -7,7 +9,19 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, ModalController } from '@ionic/angular/standalone';
+import {
+  AlertController,
+  ModalController,
+  IonCardContent,
+  IonToolbar,
+  IonTitle,
+  IonButtons,
+  IonIcon,
+  IonCard,
+  IonCol,
+  IonRow,
+  IonGrid,
+} from '@ionic/angular/standalone';
 import {
   IonButton,
   IonContent,
@@ -24,10 +38,19 @@ import { MotorcycleService } from 'src/app/services/motorcycle.service';
 
 @Component({
   selector: 'app-order-item-form-modal',
-  templateUrl: './motorcylcle-form.modal.html',
-  styleUrl: './motorcylcle-form.modal.scss',
+  templateUrl: './motorcycle-form.modal.html',
+  styleUrl: './motorcycle-form.modal.scss',
   standalone: true,
   imports: [
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonCard,
+    IonIcon,
+    IonButtons,
+    IonTitle,
+    IonToolbar,
+    IonCardContent,
     CommonModule,
     ReactiveFormsModule,
     IonHeader,
@@ -57,6 +80,7 @@ export class MotorcycleFormModal {
     private customerService: CustomerService,
     private alertCtrl: AlertController
   ) {
+    addIcons({ add, calendar, car, card, close, person, save });
     this.form = this.fb.group({
       customerId: ['', Validators.required],
       model: ['', [Validators.required]],

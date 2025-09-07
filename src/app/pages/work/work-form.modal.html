@@ -1,63 +1,74 @@
 <ion-header>
-  <div class="modal-title-container">
-    <h2 class="modal-title">
-      {{ isEdit() ? 'Editar Serviço' : 'Adicionar Serviço' }}
-    </h2>
-  </div>
+  <ion-toolbar>
+    <ion-title>{{ isEdit() ? 'Editar Serviço' : 'Adicionar Serviço' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <form [formGroup]="form" (ngSubmit)="createOrUpdate()">
-    <ion-list lines="none">
-      <!-- Nome -->
-      <ion-item
-        [class.has-error]="form.get('name')?.invalid && form.get('name')?.touched"
-      >
-        <ion-input
-          formControlName="name"
-          label="Nome"
-          labelPlacement="stacked"
-          placeholder="Digite o nome do serviço"
-        >
-        </ion-input>
-      </ion-item>
-      <ng-container
-        *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
-      >
-        <span class="error-message">Nome é obrigatório</span>
-      </ng-container>
+    <ion-card>
+      <ion-card-content>
+        <ion-list lines="full">
+          <!-- Nome -->
+          <ion-item>
+            <ion-icon name="construct" slot="start"></ion-icon>
+            <ion-input
+              formControlName="name"
+              label="Nome"
+              labelPlacement="stacked"
+              placeholder="Digite o nome do serviço"
+              [class.ion-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+              errorText="Nome é obrigatório"
+            >
+            </ion-input>
+          </ion-item>
 
-      <!-- Preço -->
-      <ion-item
-        [class.has-error]="form.get('price')?.invalid && form.get('price')?.touched"
-      >
-        <ion-input
-          formControlName="price"
-          label="Preço"
-          labelPlacement="stacked"
-          placeholder="Digite o preço do serviço"
-          type="number"
-          min="0"
-          step="0.01"
-        >
-        </ion-input>
-      </ion-item>
-      <ng-container
-        *ngIf="form.get('price')?.invalid && form.get('price')?.touched"
-      >
-        <span class="error-message"
-          >Preço é obrigatório e deve ser positivo</span
-        >
-      </ng-container>
-    </ion-list>
+          <!-- Preço -->
+          <ion-item>
+            <ion-icon name="cash" slot="start"></ion-icon>
+            <ion-input
+              formControlName="price"
+              label="Preço"
+              labelPlacement="stacked"
+              placeholder="Digite o preço do serviço"
+              type="number"
+              min="0"
+              step="0.01"
+              [class.ion-invalid]="form.get('price')?.invalid && form.get('price')?.touched"
+              errorText="Preço é obrigatório e deve ser positivo"
+            >
+            </ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
 
-    <div class="modal-actions">
-      <ion-button (click)="closeModal()" fill="outline" color="medium">
-        Cancelar
-      </ion-button>
-      <ion-button type="submit" [disabled]="form.invalid" fill="solid">
-        {{ isEdit() ? 'Salvar' : 'Adicionar' }}
-      </ion-button>
-    </div>
+    <ion-grid class="ion-padding-top">
+      <ion-row>
+        <ion-col size="6">
+          <ion-button 
+            fill="outline" 
+            color="medium" 
+            expand="block"
+            (click)="closeModal()">
+            Cancelar
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button
+            type="submit"
+            expand="block"
+            [disabled]="form.invalid">
+            <ion-icon name="{{ isEdit() ? 'save' : 'add' }}" slot="start"></ion-icon>
+            {{ isEdit() ? 'Salvar' : 'Adicionar' }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </form>
 </ion-content>

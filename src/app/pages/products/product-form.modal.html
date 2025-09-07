@@ -1,66 +1,84 @@
 <ion-header>
-  <div class="modal-title-container">
-    <h2 class="modal-title">{{ isEdit() ? 'Editar Produto' : 'Adicionar Produto' }}</h2>
-  </div>
+  <ion-toolbar>
+    <ion-title>{{ isEdit() ? 'Editar Produto' : 'Adicionar Produto' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <form [formGroup]="form" (ngSubmit)="createOrUpdate()">
-    <ion-list lines="none">
+    <ion-card>
+      <ion-card-content>
+        <ion-list lines="full">
+          <!-- Nome -->
+          <ion-item>
+            <ion-icon name="pricetag" slot="start"></ion-icon>
+            <ion-input 
+              formControlName="name" 
+              label="Nome" 
+              labelPlacement="stacked" 
+              placeholder="Digite o nome do produto"
+              [class.ion-invalid]="form.get('name')?.invalid && form.get('name')?.touched"
+              errorText="Nome é obrigatório">
+            </ion-input>
+          </ion-item>
 
-      <!-- Nome -->
-      <ion-item [class.has-error]="form.get('name')?.invalid && form.get('name')?.touched">
-        <ion-input 
-          formControlName="name" 
-          label="Nome" 
-          labelPlacement="stacked" 
-          placeholder="Digite o nome do produto">
-        </ion-input>
-      </ion-item>
-      @if(form.get('name')?.invalid && form.get('name')?.touched){
-        <ng-container>
-          <span class="error-message">Nome é obrigatório</span>
-        </ng-container>
-      }
-      <!-- Estoque -->
-      <ion-item [class.has-error]="form.get('stock')?.invalid && form.get('stock')?.touched">
-        <ion-input 
-          type="number"
-          formControlName="stock" 
-          label="Estoque" 
-          labelPlacement="stacked" 
-          placeholder="Quantidade em estoque">
-        </ion-input>
-      </ion-item>
-      @if(form.get('stock')?.invalid && form.get('stock')?.touched){
-        <ng-container>
-          <span class="error-message">Estoque deve ser maior ou igual a 0</span>
-        </ng-container>
-        }
-      <!-- Preço -->
-      <ion-item [class.has-error]="form.get('price')?.invalid && form.get('price')?.touched">
-        <ion-input 
-          type="number"
-          formControlName="price" 
-          label="Preço (R$)" 
-          labelPlacement="stacked" 
-          placeholder="Digite o preço do produto">
-        </ion-input>
-      </ion-item>
-      @if(form.get('price')?.invalid && form.get('price')?.touched){
-        <ng-container>
-          <span class="error-message">Preço deve ser maior que 0</span>
-        </ng-container>
-      }
-    </ion-list>
+          <!-- Estoque -->
+          <ion-item>
+            <ion-icon name="cube" slot="start"></ion-icon>
+            <ion-input 
+              type="number"
+              formControlName="stock" 
+              label="Estoque" 
+              labelPlacement="stacked" 
+              placeholder="Quantidade em estoque"
+              [class.ion-invalid]="form.get('stock')?.invalid && form.get('stock')?.touched"
+              errorText="Estoque deve ser maior ou igual a 0">
+            </ion-input>
+          </ion-item>
 
-    <div class="modal-actions">
-      <ion-button fill="clear" color="medium" (click)="closeModal()">Cancelar</ion-button>
-      <ion-button 
-        type="submit" 
-        [disabled]="form.invalid">
-        {{ isEdit() ? 'Atualizar' : 'Salvar' }}
-      </ion-button>
-    </div>
+          <!-- Preço -->
+          <ion-item>
+            <ion-icon name="cash" slot="start"></ion-icon>
+            <ion-input 
+              type="number"
+              formControlName="price" 
+              label="Preço (R$)" 
+              labelPlacement="stacked" 
+              placeholder="Digite o preço do produto"
+              [class.ion-invalid]="form.get('price')?.invalid && form.get('price')?.touched"
+              errorText="Preço deve ser maior que 0">
+            </ion-input>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-grid class="ion-padding-top">
+      <ion-row>
+        <ion-col size="6">
+          <ion-button 
+            fill="outline" 
+            color="medium" 
+            expand="block"
+            (click)="closeModal()">
+            Cancelar
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button
+            type="submit"
+            expand="block"
+            [disabled]="form.invalid">
+            <ion-icon name="{{ isEdit() ? 'save' : 'add' }}" slot="start"></ion-icon>
+            {{ isEdit() ? 'Salvar' : 'Adicionar' }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </form>
 </ion-content>

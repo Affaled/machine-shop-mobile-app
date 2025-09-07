@@ -1,14 +1,25 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { add, cash, close, cube, pricetag, save } from 'ionicons/icons';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalController } from '@ionic/angular/standalone';
 import { 
-  IonButton, 
-  IonContent, 
-  IonHeader, 
-  IonInput, 
-  IonItem, 
-  IonList, 
+  IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCol,
+  IonContent,
+  IonGrid,
+  IonHeader,
+  IonIcon,
+  IonInput,
+  IonItem,
+  IonList,
+  IonRow,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 
 import { Product } from 'src/app/models/product.model';
@@ -21,13 +32,22 @@ import { ProductService } from 'src/app/services/product.service';
   standalone: true,
   imports: [
     CommonModule, 
-    ReactiveFormsModule, 
-    IonHeader, 
-    IonButton, 
-    IonContent, 
-    IonItem, 
+    ReactiveFormsModule,
+    IonButton,
+    IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCol,
+    IonContent,
+    IonGrid,
+    IonHeader,
+    IonIcon,
     IonInput,
-    IonList
+    IonItem,
+    IonList,
+    IonRow,
+    IonTitle,
+    IonToolbar,
   ]
 })
 export class ProductFormModal {
@@ -41,6 +61,7 @@ export class ProductFormModal {
     private modalCtrl: ModalController,
     private productService: ProductService
   ) {
+    addIcons({ add, cash, close, cube, pricetag, save });
     this.form = this.fb.group({
       name: ['', Validators.required],
       stock: [0, [Validators.required, Validators.min(0)]],

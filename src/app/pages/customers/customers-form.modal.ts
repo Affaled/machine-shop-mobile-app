@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { add, call, car, close, informationCircle, person, save } from 'ionicons/icons';
 import {
   FormBuilder,
   FormGroup,
@@ -9,13 +11,23 @@ import {
 import { ModalController } from '@ionic/angular/standalone';
 import {
   IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
+  IonIcon,
   IonInput,
   IonItem,
+  IonLabel,
   IonList,
-  IonSelect,
-  IonSelectOption,
+  IonRow,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { Customer } from 'src/app/models/customer.model';
 import { Motorcycle } from 'src/app/models/motorcycle.model';
@@ -30,12 +42,24 @@ import { MotorcycleService } from 'src/app/services/motorcycle.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    IonHeader,
     IonButton,
+    IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonCol,
     IonContent,
-    IonItem,
+    IonGrid,
+    IonHeader,
+    IonIcon,
     IonInput,
+    IonItem,
+    IonLabel,
     IonList,
+    IonRow,
+    IonTitle,
+    IonToolbar,
   ],
 })
 export class CustomerFormModal {
@@ -54,6 +78,7 @@ export class CustomerFormModal {
     private customerService: CustomerService,
     private motorcycleService: MotorcycleService
   ) {
+    addIcons({ add, call, car, close, informationCircle, person, save });
     this.form = this.fb.group({
       name: ['', Validators.required],
       phone: ['', Validators.required],

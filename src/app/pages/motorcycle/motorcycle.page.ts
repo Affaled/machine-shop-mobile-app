@@ -26,7 +26,7 @@ import { AlertController } from '@ionic/angular';
 import { CustomerService } from 'src/app/services/customer.service';
 import { Motorcycle } from 'src/app/models/motorcycle.model';
 import { Customer } from 'src/app/models/customer.model';
-import { MotorcycleFormModal } from './motorcylcle-form.modal';
+import { MotorcycleFormModal } from './motorcycle-form.modal';
 
 @Component({
   selector: 'app-motorcycle',

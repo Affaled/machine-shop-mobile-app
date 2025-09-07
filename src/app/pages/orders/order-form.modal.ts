@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal, computed, effect } from '@angular/core';
+import { addIcons } from 'ionicons';
+import { add, car, cash, checkmarkCircle, close, construct, cube, person, save } from 'ionicons/icons';
 import {
   FormBuilder,
   FormGroup,
@@ -10,12 +12,24 @@ import { ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular/standalone';
 import {
   IonButton,
+  IonButtons,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardTitle,
+  IonCol,
   IonContent,
+  IonGrid,
   IonHeader,
+  IonIcon,
   IonItem,
+  IonLabel,
   IonList,
+  IonRow,
   IonSelect,
   IonSelectOption,
+  IonTitle,
+  IonToolbar,
 } from '@ionic/angular/standalone';
 import { Order } from 'src/app/models/order.model';
 import { Motorcycle } from 'src/app/models/motorcycle.model';
@@ -33,13 +47,25 @@ import { OrderService } from 'src/app/services/order.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    IonHeader,
     IonButton,
+    IonButtons,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardTitle,
+    IonCol,
     IonContent,
+    IonGrid,
+    IonHeader,
+    IonIcon,
     IonItem,
+    IonLabel,
+    IonList,
+    IonRow,
     IonSelect,
     IonSelectOption,
-    IonList,
+    IonTitle,
+    IonToolbar,
   ],
 })
 export class OrderFormModal {
@@ -101,6 +127,7 @@ export class OrderFormModal {
     private orderService: OrderService,
     private alertCtrl: AlertController
   ) {
+    addIcons({ add, car, cash, checkmarkCircle, close, construct, cube, person, save });
     this.form = this.fb.group({
       customerId: ['', Validators.required],
       motorcycleId: ['', Validators.required],

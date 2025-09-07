@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{ isEdit() ? 'Editar Moto' : 'Adicionar Moto' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <form [formGroup]="form" (ngSubmit)="createOrUpdate()">
+    <ion-card>
+      <ion-card-content>
+        <ion-list lines="full">
+
+          <!-- Cliente -->
+          <ion-item>
+            <ion-icon name="person" slot="start"></ion-icon>
+            <ion-select 
+              formControlName="customerId"
+              interface="action-sheet"
+              label="Cliente"
+              labelPlacement="stacked"
+              placeholder="Selecione um cliente"
+              [class.ion-invalid]="form.get('customerId')?.invalid && form.get('customerId')?.touched"
+              errorText="Cliente é obrigatório">
+              <ion-select-option *ngFor="let c of customers$()" [value]="c.id">
+                {{ c.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Modelo -->
+          <ion-item>
+            <ion-icon name="car" slot="start"></ion-icon>
+            <ion-input
+              type="text"
+              formControlName="model"
+              label="Modelo"
+              labelPlacement="stacked"
+              placeholder="Digite o modelo do veículo"
+              [class.ion-invalid]="form.get('model')?.invalid && form.get('model')?.touched"
+              errorText="Modelo é obrigatório">
+            </ion-input>
+          </ion-item>
+
+          <!-- Placa -->
+          <ion-item>
+            <ion-icon name="card" slot="start"></ion-icon>
+            <ion-input
+              type="text"
+              formControlName="plate"
+              label="Placa"
+              labelPlacement="stacked"
+              placeholder="Digite a placa"
+              [class.ion-invalid]="form.get('plate')?.invalid && form.get('plate')?.touched"
+              errorText="Placa é obrigatória">
+            </ion-input>
+          </ion-item>
+
+          <!-- Ano -->
+          <ion-item>
+            <ion-icon name="calendar" slot="start"></ion-icon>
+            <ion-input
+              type="number"
+              formControlName="year"
+              label="Ano"
+              labelPlacement="stacked"
+              min="1900"
+              max="{{ currentYear }}"
+              placeholder="2025"
+              [class.ion-invalid]="form.get('year')?.invalid && form.get('year')?.touched"
+              errorText="Ano é obrigatório e deve ser válido">
+            </ion-input>
+          </ion-item>
+
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-grid class="ion-padding-top">
+      <ion-row>
+        <ion-col size="6">
+          <ion-button 
+            fill="outline" 
+            color="medium" 
+            expand="block"
+            (click)="closeModal()">
+            Cancelar
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button
+            type="submit"
+            expand="block"
+            [disabled]="form.invalid">
+            <ion-icon name="{{ isEdit() ? 'save' : 'add' }}" slot="start"></ion-icon>
+            {{ isEdit() ? 'Salvar' : 'Adicionar' }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

@@ -1,241 +1,215 @@
 <ion-header>
-  <div class="modal-title-container">
-    <h2 class="modal-title">
-      {{ isEdit() ? 'Editar Ordem' : 'Adicionar Ordem' }}
-    </h2>
-  </div>
+  <ion-toolbar>
+    <ion-title>{{ isEdit() ? 'Editar Ordem' : 'Adicionar Ordem' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="closeModal()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="form-container">
-    <form [formGroup]="form" (ngSubmit)="createOrUpdate()">
-      <div class="form-card">
-        <div class="form-section">
-          <ion-list lines="none">
-            <!-- Cliente -->
-            <ng-container
-              *ngIf="form.get('customerId')?.invalid && form.get('customerId')?.touched"
+  <form [formGroup]="form" (ngSubmit)="createOrUpdate()">
+    <ion-card>
+      <ion-card-content>
+        <ion-list lines="full">
+          <!-- Cliente -->
+          <ion-item>
+            <ion-icon name="person" slot="start"></ion-icon>
+            <ion-select
+              formControlName="customerId"
+              interface="action-sheet"
+              label="Cliente"
+              labelPlacement="stacked"
+              placeholder="Selecione um cliente"
+              [class.ion-invalid]="form.get('customerId')?.invalid && form.get('customerId')?.touched"
+              errorText="Cliente é obrigatório"
+              (ionChange)="onCustomerChange($event)"
             >
-              <span class="error-message">Cliente é obrigatório</span>
-            </ng-container>
-            <ion-item
-              [class.has-error]="form.get('customerId')?.invalid && form.get('customerId')?.touched"
-            >
-              <div class="input-with-icon">
-                <span class="material-symbols-outlined input-icon">person</span>
-                <ion-select
-                  formControlName="customerId"
-                  interface="action-sheet"
-                  label="Cliente"
-                  labelPlacement="stacked"
-                  placeholder="Selecione um cliente"
-                  (ionChange)="onCustomerChange($event)"
-                >
-                  <ion-select-option
-                    *ngFor="let c of customers$()"
-                    [value]="c.id"
-                  >
-                    {{ c.name }}
-                  </ion-select-option>
-                </ion-select>
-              </div>
-            </ion-item>
-
-            <!-- Motocicleta -->
-            <ng-container
-              *ngIf="form.get('motorcycleId')?.invalid && form.get('motorcycleId')?.touched"
-            >
-              <span class="error-message">Motocicleta é obrigatória</span>
-            </ng-container>
-            <ion-item
-              [class.has-error]="form.get('motorcycleId')?.invalid && form.get('motorcycleId')?.touched"
-            >
-              <div class="input-with-icon">
-                <span class="material-symbols-outlined input-icon"
-                  >motorcycle</span
-                >
-                <ion-select
-                  formControlName="motorcycleId"
-                  interface="action-sheet"
-                  label="Motocicleta"
-                  labelPlacement="stacked"
-                  placeholder="Selecione uma motocicleta"
-                >
-                  <ion-select-option
-                    *ngFor="let m of customerMotorcycles$()"
-                    [value]="m.id"
-                  >
-                    {{ m.model }} - {{ m.plate }} ({{ m.year }})
-                  </ion-select-option>
-                </ion-select>
-              </div>
-            </ion-item>
-
-            <!-- Status -->
-            <ng-container
-              *ngIf="form.get('status')?.invalid && form.get('status')?.touched"
-            >
-              <span class="error-message">Status é obrigatório</span>
-            </ng-container>
-            <ion-item
-              [class.has-error]="form.get('status')?.invalid && form.get('status')?.touched"
-            >
-              <div class="input-with-icon">
-                <span class="material-symbols-outlined input-icon"
-                  >task_alt</span
-                >
-                <ion-select
-                  formControlName="status"
-                  interface="action-sheet"
-                  label="Status"
-                  labelPlacement="stacked"
-                  placeholder="Selecione o status"
-                >
-                  <ion-select-option value="pending"
-                    >Pendente</ion-select-option
-                  >
-                  <ion-select-option value="in_progress"
-                    >Em Andamento</ion-select-option
-                  >
-                  <ion-select-option value="completed"
-                    >Concluído</ion-select-option
-                  >
-                </ion-select>
-              </div>
-            </ion-item>
-
-            <!-- Serviços -->
-            <ion-item>
-              <div class="input-with-icon">
-                <span class="material-symbols-outlined input-icon">build</span>
-                <ion-select
-                  formControlName="serviceIds"
-                  interface="action-sheet"
-                  label="Serviços"
-                  labelPlacement="stacked"
-                  placeholder="Selecione os serviços"
-                  multiple="true"
-                  (ionChange)="onServicesChange($event)"
-                >
-                  <ion-select-option *ngFor="let w of works$()" [value]="w.id">
-                    {{ w.name }} - R$ {{ w.price | number:'1.2-2' }}
-                  </ion-select-option>
-                </ion-select>
-              </div>
-            </ion-item>
-
-            <!-- Produtos -->
-            <ion-item>
-              <div class="input-with-icon">
-                <span class="material-symbols-outlined input-icon"
-                  >inventory_2</span
-                >
-                <ion-select
-                  formControlName="productIds"
-                  interface="action-sheet"
-                  label="Produtos"
-                  labelPlacement="stacked"
-                  placeholder="Selecione os produtos"
-                  multiple="true"
-                  (ionChange)="onProductsChange($event)"
-                >
-                  <ion-select-option
-                    *ngFor="let p of products$()"
-                    [value]="p.id"
-                  >
-                    {{ p.name }} - R$ {{ p.price | number:'1.2-2' }}
-                  </ion-select-option>
-                </ion-select>
-              </div>
-            </ion-item>
-          </ion-list>
-        </div>
-
-        <!-- Lista de Serviços Selecionados -->
-        <div
-          class="selected-items-section"
-          *ngIf="selectedServices().length > 0"
-        >
-          <h3>Serviços Selecionados</h3>
-          <div class="selected-items-list">
-            <div
-              class="selected-item"
-              *ngFor="let service of selectedServices()"
-            >
-              <div class="item-info">
-                <span class="item-name">{{ service.name }}</span>
-                <span class="item-price"
-                  >R$ {{ service.price | number:'1.2-2' }}</span
-                >
-              </div>
-              <ion-button
-                fill="clear"
-                size="small"
-                color="danger"
-                (click)="removeService(service.id)"
+              <ion-select-option
+                *ngFor="let c of customers$()"
+                [value]="c.id"
               >
-                <span class="material-symbols-outlined">close</span>
-              </ion-button>
-            </div>
-          </div>
-        </div>
+                {{ c.name }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
 
-        <!-- Lista de Produtos Selecionados -->
-        <div
-          class="selected-items-section"
-          *ngIf="selectedProducts().length > 0"
-        >
-          <h3>Produtos Selecionados</h3>
-          <div class="selected-items-list">
-            <div
-              class="selected-item"
-              *ngFor="let product of selectedProducts()"
+          <!-- Motocicleta -->
+          <ion-item>
+            <ion-icon name="car" slot="start"></ion-icon>
+            <ion-select
+              formControlName="motorcycleId"
+              interface="action-sheet"
+              label="Motocicleta"
+              labelPlacement="stacked"
+              placeholder="Selecione uma motocicleta"
+              [class.ion-invalid]="form.get('motorcycleId')?.invalid && form.get('motorcycleId')?.touched"
+              errorText="Motocicleta é obrigatória"
             >
-              <div class="item-info">
-                <span class="item-name">{{ product.name }}</span>
-                <span class="item-price"
-                  >R$ {{ product.price | number:'1.2-2' }}</span
-                >
-              </div>
-              <ion-button
-                fill="clear"
-                size="small"
-                color="danger"
-                (click)="removeProduct(product.id)"
+              <ion-select-option
+                *ngFor="let m of customerMotorcycles$()"
+                [value]="m.id"
               >
-                <span class="material-symbols-outlined">close</span>
-              </ion-button>
-            </div>
-          </div>
-        </div>
+                {{ m.model }} - {{ m.plate }} ({{ m.year }})
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
 
-        <!-- Total -->
-        <div class="total-section" *ngIf="totalPrice() > 0">
-          <div class="total-item">
-            <span class="total-label">Total:</span>
-            <span class="total-value"
-              >R$ {{ totalPrice() | number:'1.2-2' }}</span
+          <!-- Status -->
+          <ion-item>
+            <ion-icon name="checkmark-circle" slot="start"></ion-icon>
+            <ion-select
+              formControlName="status"
+              interface="action-sheet"
+              label="Status"
+              labelPlacement="stacked"
+              placeholder="Selecione o status"
+              [class.ion-invalid]="form.get('status')?.invalid && form.get('status')?.touched"
+              errorText="Status é obrigatório"
             >
-          </div>
-        </div>
-      </div>
+              <ion-select-option value="pending"
+                >Pendente</ion-select-option
+              >
+              <ion-select-option value="in_progress"
+                >Em Andamento</ion-select-option
+              >
+              <ion-select-option value="completed"
+                >Concluído</ion-select-option
+              >
+            </ion-select>
+          </ion-item>
 
-      <div class="modal-actions">
-        <ion-button
-          fill="clear"
-          color="medium"
-          (click)="closeModal()"
-          class="cancel-button"
-        >
-          Cancelar
-        </ion-button>
-        <ion-button type="submit" [disabled]="form.invalid" class="save-button">
-          <span class="material-symbols-outlined button-icon">
-            {{ isEdit() ? 'save' : 'add' }}
-          </span>
-          {{ isEdit() ? 'Salvar Alterações' : 'Adicionar Ordem' }}
-        </ion-button>
-      </div>
-    </form>
-  </div>
+          <!-- Serviços -->
+          <ion-item>
+            <ion-icon name="construct" slot="start"></ion-icon>
+            <ion-select
+              formControlName="serviceIds"
+              interface="action-sheet"
+              label="Serviços"
+              labelPlacement="stacked"
+              placeholder="Selecione os serviços"
+              multiple="true"
+              (ionChange)="onServicesChange($event)"
+            >
+              <ion-select-option *ngFor="let w of works$()" [value]="w.id">
+                {{ w.name }} - R$ {{ w.price | number:'1.2-2' }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+
+          <!-- Produtos -->
+          <ion-item>
+            <ion-icon name="cube" slot="start"></ion-icon>
+            <ion-select
+              formControlName="productIds"
+              interface="action-sheet"
+              label="Produtos"
+              labelPlacement="stacked"
+              placeholder="Selecione os produtos"
+              multiple="true"
+              (ionChange)="onProductsChange($event)"
+            >
+              <ion-select-option
+                *ngFor="let p of products$()"
+                [value]="p.id"
+              >
+                {{ p.name }} - R$ {{ p.price | number:'1.2-2' }}
+              </ion-select-option>
+            </ion-select>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Lista de Serviços Selecionados -->
+    <ion-card *ngIf="selectedServices().length > 0">
+      <ion-card-header>
+        <ion-card-title>Serviços Selecionados</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item *ngFor="let service of selectedServices()">
+            <ion-icon name="construct" slot="start"></ion-icon>
+            <ion-label>
+              <h3>{{ service.name }}</h3>
+              <p>R$ {{ service.price | number:'1.2-2' }}</p>
+            </ion-label>
+            <ion-button
+              fill="clear"
+              size="small"
+              color="danger"
+              slot="end"
+              (click)="removeService(service.id)"
+            >
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Lista de Produtos Selecionados -->
+    <ion-card *ngIf="selectedProducts().length > 0">
+      <ion-card-header>
+        <ion-card-title>Produtos Selecionados</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-list lines="none">
+          <ion-item *ngFor="let product of selectedProducts()">
+            <ion-icon name="cube" slot="start"></ion-icon>
+            <ion-label>
+              <h3>{{ product.name }}</h3>
+              <p>R$ {{ product.price | number:'1.2-2' }}</p>
+            </ion-label>
+            <ion-button
+              fill="clear"
+              size="small"
+              color="danger"
+              slot="end"
+              (click)="removeProduct(product.id)"
+            >
+              <ion-icon name="close"></ion-icon>
+            </ion-button>
+          </ion-item>
+        </ion-list>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Total -->
+    <ion-card *ngIf="totalPrice() > 0">
+      <ion-card-content>
+        <ion-item lines="none">
+          <ion-icon name="cash" slot="start" color="success"></ion-icon>
+          <ion-label>
+            <h2><strong>Total: R$ {{ totalPrice() | number:'1.2-2' }}</strong></h2>
+          </ion-label>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-grid class="ion-padding-top">
+      <ion-row>
+        <ion-col size="6">
+          <ion-button 
+            fill="outline" 
+            color="medium" 
+            expand="block"
+            (click)="closeModal()">
+            Cancelar
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button
+            type="submit"
+            expand="block"
+            [disabled]="form.invalid">
+            <ion-icon name="{{ isEdit() ? 'save' : 'add' }}" slot="start"></ion-icon>
+            {{ isEdit() ? 'Salvar' : 'Adicionar' }}
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
 </ion-content>
