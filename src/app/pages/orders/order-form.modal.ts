@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal, computed, effect } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular/standalone';
 import {
@@ -38,48 +43,50 @@ import { OrderService } from 'src/app/services/order.service';
     IonSelect,
     IonSelectOption,
     IonInput,
-    IonList
-  ]
+    IonList,
+  ],
 })
 export class OrderFormModal {
-  @Input() id?: string;
+  @Input() order?: Order;
 
   form: FormGroup;
   isEdit = signal(false);
   private selectedCustomerId = signal<string>('');
-  
 
   public readonly motorcycles$ = this.motorcycleService.motorcycles$;
   public readonly customers$ = this.customerService.customer$;
   public readonly products$ = this.productService.products$;
   public readonly works$ = this.workService.work$;
-  
+
   private allMotorcycles = signal<Motorcycle[]>([]);
 
   public readonly customerMotorcycles$ = computed(() => {
     const customerId = this.selectedCustomerId();
-    return this.allMotorcycles().filter(m => m.customerId === customerId);
+    return this.allMotorcycles().filter((m) => m.customerId === customerId);
   });
-
 
   private selectedServiceIds = signal<string[]>([]);
   private selectedProductIds = signal<string[]>([]);
-  
 
   public readonly selectedServices = computed(() => {
     const serviceIds = this.selectedServiceIds();
-    return this.works$().filter(w => serviceIds.includes(w.id));
+    return this.works$().filter((w) => serviceIds.includes(w.id));
   });
 
   public readonly selectedProducts = computed(() => {
     const productIds = this.selectedProductIds();
-    return this.products$().filter(p => productIds.includes(p.id));
+    return this.products$().filter((p) => productIds.includes(p.id));
   });
 
-
   public readonly totalPrice = computed(() => {
-    const servicesTotal = this.selectedServices().reduce((sum, service) => sum + service.price, 0);
-    const productsTotal = this.selectedProducts().reduce((sum, product) => sum + product.price, 0);
+    const servicesTotal = this.selectedServices().reduce(
+      (sum, service) => sum + service.price,
+      0
+    );
+    const productsTotal = this.selectedProducts().reduce(
+      (sum, product) => sum + product.price,
+      0
+    );
     return servicesTotal + productsTotal;
   });
 
@@ -103,39 +110,35 @@ export class OrderFormModal {
       motorcycleId: ['', Validators.required],
       status: ['pending', Validators.required],
       serviceIds: [[]],
-      productIds: [[]]
+      productIds: [[]],
     });
 
     effect(() => {
-    this.allMotorcycles.set(this.motorcycleService.motorcycles$());
-  });
+      this.allMotorcycles.set(this.motorcycleService.motorcycles$());
+    });
   }
-  
-
 
   async ngOnInit() {
     this.allMotorcycles.set(this.motorcycles$());
 
-    this.id = this.route.snapshot.paramMap.get('id') ?? this.id;
-    if (this.id) {
-      const record = await this.orderService.getById(this.id);
-      if (record) {
-        this.isEdit.set(true);
-        
-        const serviceIds = record.services?.map(s => s.id) || [];
-        const productIds = record.products?.map(p => p.id) || [];
-        
-        this.selectedServiceIds.set(serviceIds);
-        this.selectedProductIds.set(productIds);
+    if (this.order) {
+      this.isEdit.set(true);
 
-        this.form.patchValue({
-          customerId: record.customerId,
-          motorcycleId: record.motorcycleId,
-          status: record.status,
-          serviceIds: serviceIds,
-          productIds: productIds
-        });
-      }
+      const serviceIds = this.order.services?.map((s) => s.id) || [];
+      const productIds = this.order.products?.map((p) => p.id) || [];
+
+      this.selectedServiceIds.set(serviceIds);
+      this.selectedProductIds.set(productIds);
+
+      this.form.patchValue({
+        customerId: this.order.customerId,
+        motorcycleId: this.order.motorcycleId,
+        status: this.order.status,
+        serviceIds: serviceIds,
+        productIds: productIds,
+      });
+
+      this.selectedCustomerId.set(this.order.customerId);
     }
   }
 
@@ -144,11 +147,11 @@ export class OrderFormModal {
   }
 
   onCustomerChange(event: any) {
-
     const customerId = event.detail.value;
-    if(customerId && customerId !== '') this.form.get('motorcycleId')?.enable();
+    if (customerId && customerId !== '')
+      this.form.get('motorcycleId')?.enable();
     else this.form.get('motorcycleId')?.disable();
-    
+
     this.selectedCustomerId.set(customerId || '');
     this.form.patchValue({ motorcycleId: '' });
   }
@@ -165,14 +168,14 @@ export class OrderFormModal {
 
   removeService(serviceId: string) {
     const currentIds = this.selectedServiceIds();
-    const newIds = currentIds.filter(id => id !== serviceId);
+    const newIds = currentIds.filter((id) => id !== serviceId);
     this.selectedServiceIds.set(newIds);
     this.form.patchValue({ serviceIds: newIds });
   }
 
   removeProduct(productId: string) {
     const currentIds = this.selectedProductIds();
-    const newIds = currentIds.filter(id => id !== productId);
+    const newIds = currentIds.filter((id) => id !== productId);
     this.selectedProductIds.set(newIds);
     this.form.patchValue({ productIds: newIds });
   }
@@ -181,21 +184,21 @@ export class OrderFormModal {
     if (!this.form.valid) return;
 
     const fv = this.form.getRawValue();
-    
+
     const services = this.selectedServices();
     const products = this.selectedProducts();
 
     const entity: Order = {
-      id: this.id ?? crypto.randomUUID(),
+      id: this.order?.id ?? crypto.randomUUID(), // pega do @Input
       customerId: fv.customerId,
       motorcycleId: fv.motorcycleId,
       services: services.length > 0 ? services : undefined,
       products: products.length > 0 ? products : undefined,
       status: fv.status,
       totalPrice: this.totalPrice(),
-      createdDate: this.isEdit() ? 
-        (await this.orderService.getById(this.id!))?.createdDate || new Date().toISOString() : 
-        new Date().toISOString()
+      createdDate: this.isEdit()
+        ? this.order?.createdDate || new Date().toISOString()
+        : new Date().toISOString(),
     };
 
     try {
@@ -209,7 +212,7 @@ export class OrderFormModal {
       const alert = await this.alertCtrl.create({
         header: 'Erro',
         message: 'Ocorreu um erro ao salvar o pedido. Tente novamente.',
-        buttons: ['OK']
+        buttons: ['OK'],
       });
       await alert.present();
     }
