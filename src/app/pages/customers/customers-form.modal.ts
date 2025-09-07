@@ -1,16 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ModalController } from '@ionic/angular/standalone';
-import { 
-  IonButton, 
-  IonContent, 
-  IonHeader, 
-  IonInput, 
-  IonItem, 
-  IonList, 
-  IonSelect, 
-  IonSelectOption, 
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonList,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/angular/standalone';
 import { Customer } from 'src/app/models/customer.model';
 import { Motorcycle } from 'src/app/models/motorcycle.model';
@@ -23,23 +28,23 @@ import { MotorcycleService } from 'src/app/services/motorcycle.service';
   styleUrl: './customers-form.modal.css',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    IonHeader, 
-    IonButton, 
-    IonContent, 
-    IonItem, 
+    CommonModule,
+    ReactiveFormsModule,
+    IonHeader,
+    IonButton,
+    IonContent,
+    IonItem,
     IonInput,
-    IonList
-  ]
+    IonList,
+  ],
 })
 export class CustomerFormModal {
   customer?: Customer;
-  
+
   isEdit = signal(false);
   form: FormGroup;
   motorcyclesCustomer = signal<Motorcycle[]>([]);
-  
+
   public readonly customers$ = this.customerService.customer$;
   motorcycles$ = this.motorcycleService.motorcycles$;
 
@@ -51,7 +56,7 @@ export class CustomerFormModal {
   ) {
     this.form = this.fb.group({
       name: ['', Validators.required],
-      phone: ['', Validators.required]
+      phone: ['', Validators.required],
     });
   }
 
@@ -60,11 +65,13 @@ export class CustomerFormModal {
       this.isEdit.set(true);
       this.form.patchValue({
         name: this.customer.name,
-        phone: this.customer.phone
+        phone: this.customer.phone,
       });
 
       const allMotos = await this.motorcycles$();
-      this.motorcyclesCustomer.set(allMotos.filter(m => m.customerId === this.customer?.id));
+      this.motorcyclesCustomer.set(
+        allMotos.filter((m) => m.customerId === this.customer?.id)
+      );
     }
   }
 
@@ -79,11 +86,11 @@ export class CustomerFormModal {
     const record: Customer = {
       id: this.customer?.id || crypto.randomUUID(),
       name: fv.name,
-      phone: fv.phone
+      phone: fv.phone,
     };
-    if(this.isEdit()) await this.customerService.updateCustomer(record);
+    if (this.isEdit()) await this.customerService.updateCustomer(record);
     else await this.customerService.addCustomer(record);
- 
+
     this.closeModal();
   }
 }

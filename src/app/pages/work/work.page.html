@@ -1,6 +1,6 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Clientes</ion-title>
+    <ion-title>Serviços</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="openModal()">
         <span class="material-symbols-outlined button-icon">add</span>
@@ -11,7 +11,7 @@
 
 <ion-content [fullscreen]="true">
   <ion-searchbar
-    placeholder="Buscar cliente"
+    placeholder="Buscar serviço"
     animated="true"
     debounce="500"
     [(ngModel)]="searchTerm"
@@ -25,35 +25,37 @@
   <div class="loading-container">
     <ion-spinner></ion-spinner>
   </div>
-  } @if (!loading && filteredCustomers().length === 0) {
+  } @if (!loading && filteredWorks().length === 0) {
   <div
     class="empty-state ion-display-flex ion-flex-column ion-justify-content-center ion-align-items-center"
   >
-    <ion-icon name="people-outline" size="large"></ion-icon>
-    <p>Nenhum cliente encontrado</p>
+    <ion-icon name="construct" size="large"></ion-icon>
+    <p>Nenhum serviço encontrado</p>
     <ion-button (click)="openModal()" fill="solid">
       <span class="material-symbols-outlined button-icon">add</span>
-      Adicionar Cliente
+      Adicionar Serviço
     </ion-button>
   </div>
-  } @if (!loading && filteredCustomers().length > 0) {
+  } @if (!loading && filteredWorks().length > 0) {
   <ion-list>
-    @for (customer of this.filteredCustomers(); track $index) {
+    @for (work of this.filteredWorks(); track $index) {
     <ion-card>
       <ion-card-header>
-        <ion-card-title>{{ customer.name }}</ion-card-title>
-        <ion-card-subtitle>{{ customer.phone }}</ion-card-subtitle>
+        <ion-card-title>{{ work.name }}</ion-card-title>
+        <ion-card-subtitle
+          >R$ {{ work.price | number : '1.2-2' }}</ion-card-subtitle
+        >
       </ion-card-header>
       <ion-card-content>
         <div>
-          <ion-button fill="clear" size="small" (click)="openModal(customer)">
+          <ion-button fill="clear" size="small" (click)="openModal(work)">
             <span class="material-symbols-outlined">edit</span>
           </ion-button>
           <ion-button
             fill="clear"
             size="small"
             color="danger"
-            (click)="deleteCustomer(customer)"
+            (click)="deleteWork(work)"
           >
             <span class="material-symbols-outlined">delete</span>
           </ion-button>
