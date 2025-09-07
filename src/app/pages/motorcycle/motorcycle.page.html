@@ -33,7 +33,7 @@
     <ion-icon name="bicycle-outline" size="large"></ion-icon>
     <p>Nenhuma moto encontrada</p>
     <ion-button (click)="openModal()" fill="solid">
-       <span class="material-symbols-outlined button-icon">add</span>
+      <span class="material-symbols-outlined button-icon">add</span>
       Adicionar Moto
     </ion-button>
   </div>
@@ -51,8 +51,8 @@
       <ion-card-content>
         <p>Cliente: {{getCustomerName(motorcycle.customerId)}}</p>
         <div>
-          <ion-button fill="clear" size="small" (click)="openModal()">
-           <span class="material-symbols-outlined">edit</span>
+          <ion-button fill="clear" size="small" (click)="openModal(motorcycle)">
+            <span class="material-symbols-outlined">edit</span>
           </ion-button>
           <ion-button
             fill="clear"

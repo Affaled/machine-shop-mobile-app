@@ -21,7 +21,7 @@ import {
   IonCardSubtitle,
   ModalController,
 } from '@ionic/angular/standalone';
-import { MotorcycleService} from 'src/app/services/motorcycle.service';
+import { MotorcycleService } from 'src/app/services/motorcycle.service';
 import { AlertController } from '@ionic/angular';
 import { CustomerService } from 'src/app/services/customer.service';
 import { Motorcycle } from 'src/app/models/motorcycle.model';
@@ -79,10 +79,11 @@ export class MotorcyclePage implements OnInit {
       return motorcycles;
     }
 
-    return motorcycles.filter(motorcycle =>
-      motorcycle.model.toLowerCase().includes(term) ||
-      motorcycle.plate.toLowerCase().includes(term) ||
-      this.getCustomerName(motorcycle.customerId).toLowerCase().includes(term)
+    return motorcycles.filter(
+      (motorcycle) =>
+        motorcycle.model.toLowerCase().includes(term) ||
+        motorcycle.plate.toLowerCase().includes(term) ||
+        this.getCustomerName(motorcycle.customerId).toLowerCase().includes(term)
     );
   });
 
@@ -92,7 +93,6 @@ export class MotorcyclePage implements OnInit {
       'Cliente não encontrado'
     );
   }
-
 
   async deleteMotorcycle(motorcycle: Motorcycle) {
     const alert = await this.alertController.create({
@@ -114,27 +114,24 @@ export class MotorcyclePage implements OnInit {
     await alert.present();
   }
 
+  async refresh(event: any) {
+    event.target.complete();
+  }
 
-    async refresh(event: any) {
-      event.target.complete();
-    }
-
-
-    async openModal() {
+  async openModal(motorcycle?: Motorcycle) {
     const modal = await this.modalController.create({
-        component: MotorcycleFormModal,
-        cssClass: 'sheet-modal', 
-        animated: true,
-        backdropDismiss: true,
-        initialBreakpoint: 1,
-        breakpoints: [0, 0.4, 0.6, 0.8, 1], 
-        handleBehavior: 'cycle' 
+      component: MotorcycleFormModal,
+      cssClass: 'sheet-modal',
+      animated: true,
+      backdropDismiss: true,
+      initialBreakpoint: 1,
+      breakpoints: [0, 0.4, 0.6, 0.8, 1],
+      handleBehavior: 'cycle',
+      componentProps: { motorcycle }, // <-- passa a moto
     });
 
-    modal.onDidDismiss().then((data) => {
+    modal.onDidDismiss().then((data) => {});
 
-    });
-    
     return await modal.present();
-    }
+  }
 }

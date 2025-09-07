@@ -42,6 +42,8 @@ import { MotorcycleService } from 'src/app/services/motorcycle.service';
 })
 export class MotorcycleFormModal {
   @Input() id?: string;
+  @Input() motorcycle?: Motorcycle;
+
   form: FormGroup;
   isEdit = signal(false);
   currentYear = new Date();
@@ -57,20 +59,16 @@ export class MotorcycleFormModal {
   ) {
     this.form = this.fb.group({
       customerId: ['', Validators.required],
-      model: [1, [Validators.required]],
-      plate: [0, [Validators.required]],
-      year: [0, [Validators.required]],
+      model: ['', [Validators.required]],
+      plate: ['', [Validators.required]],
+      year: ['', [Validators.required]],
     });
   }
 
   async ngOnInit() {
-    this.id = this.route.snapshot.paramMap.get('id') ?? undefined;
-    if (this.id) {
-      const record = await this.motorcycleService.getById(this.id);
-      if (record) {
-        this.isEdit.set(true);
-        this.form.patchValue(record);
-      }
+    if (this.motorcycle) {
+      this.isEdit.set(true);
+      this.form.patchValue(this.motorcycle);
     }
   }
 
