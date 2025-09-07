@@ -1,0 +1,67 @@
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Clientes</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openModal()">
+        <span class="material-symbols-outlined button-icon">add</span>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-searchbar
+    placeholder="Buscar cliente"
+    animated="true"
+    debounce="500"
+    [(ngModel)]="searchTerm"
+  ></ion-searchbar>
+
+  <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
+  @if (loading) {
+    <div class="loading-container">
+      <ion-spinner></ion-spinner>
+    </div>
+  } @if (!loading && filteredCustomers().length === 0) {
+    <div
+      class="empty-state ion-display-flex ion-flex-column ion-justify-content-center ion-align-items-center"
+    >
+      <ion-icon name="people-outline" size="large"></ion-icon>
+      <p>Nenhum cliente encontrado</p>
+      <ion-button (click)="openModal()" fill="solid">
+        <span class="material-symbols-outlined button-icon">add</span>
+        Adicionar Cliente
+      </ion-button>
+    </div>
+  } @if (!loading && filteredCustomers().length > 0) {
+    <ion-list>
+      @for (customer of this.filteredCustomers(); track $index) {
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{ customer.name }}</ion-card-title>
+            <ion-card-subtitle>{{ customer.phone }}</ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <div>
+              <ion-button fill="clear" size="small" (click)="openModal(customer)">
+                <span class="material-symbols-outlined">edit</span>
+              </ion-button>
+              <ion-button
+                fill="clear"
+                size="small"
+                color="danger"
+                (click)="deleteCustomer(customer)"
+              >
+                <span class="material-symbols-outlined">delete</span>
+              </ion-button>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </ion-list>
+  }
+</ion-content>
