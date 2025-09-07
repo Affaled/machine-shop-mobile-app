@@ -25,7 +25,7 @@ import { MotorcycleService } from 'src/app/services/motorcycle.service';
 @Component({
   selector: 'app-customer-form-modal',
   templateUrl: './customers-form.modal.html',
-  styleUrl: './customers-form.modal.css',
+  styleUrl: './customers-form.modal.scss',
   standalone: true,
   imports: [
     CommonModule,

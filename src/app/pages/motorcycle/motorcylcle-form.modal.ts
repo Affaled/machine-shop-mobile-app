@@ -1,17 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, signal } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AlertController, ModalController } from '@ionic/angular/standalone';
-import { 
-  IonButton, 
-  IonContent, 
-  IonHeader, 
-  IonInput, 
-  IonItem, 
-  IonList, 
-  IonSelect, 
-  IonSelectOption, 
+import {
+  IonButton,
+  IonContent,
+  IonHeader,
+  IonInput,
+  IonItem,
+  IonList,
+  IonSelect,
+  IonSelectOption,
 } from '@ionic/angular/standalone';
 import { Motorcycle } from 'src/app/models/motorcycle.model';
 import { CustomerService } from 'src/app/services/customer.service';
@@ -20,28 +25,28 @@ import { MotorcycleService } from 'src/app/services/motorcycle.service';
 @Component({
   selector: 'app-order-item-form-modal',
   templateUrl: './motorcylcle-form.modal.html',
-  styleUrl: './motorcylcle-form.modal.css',
+  styleUrl: './motorcylcle-form.modal.scss',
   standalone: true,
   imports: [
-    CommonModule, 
-    ReactiveFormsModule, 
-    IonHeader, 
-    IonButton, 
-    IonContent, 
-    IonItem, 
-    IonSelect, 
-    IonSelectOption, 
+    CommonModule,
+    ReactiveFormsModule,
+    IonHeader,
+    IonButton,
+    IonContent,
+    IonItem,
+    IonSelect,
+    IonSelectOption,
     IonInput,
-    IonList
-  ]
+    IonList,
+  ],
 })
 export class MotorcycleFormModal {
-  @Input() id?: string; 
+  @Input() id?: string;
   form: FormGroup;
   isEdit = signal(false);
   currentYear = new Date();
   public readonly customers$ = this.customerService.customer$;
-  
+
   constructor(
     private fb: FormBuilder,
     private modalCtrl: ModalController,
@@ -58,16 +63,14 @@ export class MotorcycleFormModal {
     });
   }
 
-  
-
   async ngOnInit() {
     this.id = this.route.snapshot.paramMap.get('id') ?? undefined;
-    if(this.id){
-        const record = await this.motorcycleService.getById(this.id);
-        if(record){
-            this.isEdit.set(true);
-            this.form.patchValue(record)
-        }
+    if (this.id) {
+      const record = await this.motorcycleService.getById(this.id);
+      if (record) {
+        this.isEdit.set(true);
+        this.form.patchValue(record);
+      }
     }
   }
 
@@ -76,7 +79,7 @@ export class MotorcycleFormModal {
   }
 
   async createOrUpdate() {
-  if (!this.form.valid) return;
+    if (!this.form.valid) return;
     const fv = this.form.getRawValue();
     const entity: Motorcycle = {
       id: this.id ?? crypto.randomUUID(),
@@ -86,9 +89,8 @@ export class MotorcycleFormModal {
       year: Number(fv.quantity ?? 0),
     };
 
-    if(this.isEdit()) await this.motorcycleService.updateMotorcycle(entity);
+    if (this.isEdit()) await this.motorcycleService.updateMotorcycle(entity);
     else await this.motorcycleService.createMotorcycle(entity);
     this.closeModal();
   }
-
 }
