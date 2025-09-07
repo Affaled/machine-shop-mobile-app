@@ -2,8 +2,8 @@
   <ion-toolbar>
     <ion-title>Motos</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="addMotorcycle()">
-        <ion-icon name="add-outline"></ion-icon>
+      <ion-button (click)="openModal()">
+        <span class="material-symbols-outlined button-icon">add</span>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -15,7 +15,6 @@
     animated="true"
     debounce="500"
     [(ngModel)]="searchTerm"
-    (ionInput)="filterMotorcycles()"
   ></ion-searchbar>
 
   <ion-refresher slot="fixed" (ionRefresh)="refresh($event)">
@@ -27,21 +26,21 @@
     <ion-spinner></ion-spinner>
   </div>
 
-  } @if (!loading && filteredMotorcycles.length === 0) {
+  } @if (!loading && filteredMotorcycles().length === 0) {
   <div
     class="empty-state ion-display-flex ion-flex-column ion-justify-content-center ion-align-items-center"
   >
     <ion-icon name="bicycle-outline" size="large"></ion-icon>
     <p>Nenhuma moto encontrada</p>
-    <ion-button (click)="addMotorcycle()" fill="solid">
-      <ion-icon name="add-outline" slot="start"></ion-icon>
+    <ion-button (click)="openModal()" fill="solid">
+       <span class="material-symbols-outlined button-icon">add</span>
       Adicionar Moto
     </ion-button>
   </div>
 
-  } @if (!loading && filteredMotorcycles.length > 0) {
+  } @if (!loading && filteredMotorcycles().length > 0) {
   <ion-list>
-    @for (motorcycle of filteredMotorcycles; track $index) {
+    @for (motorcycle of filteredMotorcycles(); track $index) {
     <ion-card>
       <ion-card-header>
         <ion-card-title>{{ motorcycle.model }}</ion-card-title>
@@ -52,8 +51,8 @@
       <ion-card-content>
         <p>Cliente: {{getCustomerName(motorcycle.customerId)}}</p>
         <div>
-          <ion-button fill="clear" size="small" (click)="addMotorcycle()">
-            <ion-icon name="create-outline"></ion-icon>
+          <ion-button fill="clear" size="small" (click)="openModal()">
+           <span class="material-symbols-outlined">edit</span>
           </ion-button>
           <ion-button
             fill="clear"
@@ -61,7 +60,7 @@
             color="danger"
             (click)="deleteMotorcycle(motorcycle)"
           >
-            <ion-icon name="trash-outline"></ion-icon>
+            <span class="material-symbols-outlined">delete</span>
           </ion-button>
         </div>
       </ion-card-content>

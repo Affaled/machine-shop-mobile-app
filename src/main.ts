@@ -27,10 +27,7 @@ bootstrapApplication(AppComponent, {
       registrationStrategy: 'registerWhenStable:30000',
     }),
     importProvidersFrom(
-      IonicStorageModule.forRoot({
-        name: '__oficinaDB',
-        driverOrder: ['indexeddb', 'sqlite', 'localstorage'],
-      })
+      IonicStorageModule.forRoot()
     ),
   ],
 });
